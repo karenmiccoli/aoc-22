@@ -13,8 +13,12 @@ type kv struct {
 	Value int
 }
 
-func CalculateCalories() []kv {
-	data, err := os.ReadFile("example.txt")
+func CalculateCalories(useExample bool) []kv {
+	var fileName = "example.txt"
+	if useExample {
+		fileName = "simple-example.txt"
+	}
+	data, err := os.ReadFile(fileName)
 	if err != nil {
 		log.Fatalf(err.Error(), "err")
 	}
@@ -72,8 +76,8 @@ func sortByDescendingValue(results map[int]int) []kv {
 }
 
 //FindTopThreeElves - After calculating the elf calories, the top three and summed and returned
-func FindTopThreeElves() int {
-	elfCalories := CalculateCalories()
+func FindTopThreeElves(useExample bool) int {
+	elfCalories := CalculateCalories(useExample)
 	topThreeElves := elfCalories[:3]
 
 	var result = 0
