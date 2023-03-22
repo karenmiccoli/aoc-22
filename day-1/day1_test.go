@@ -6,35 +6,23 @@ import (
 )
 
 func TestCalculateCalories(t *testing.T) {
-	t.Run("Part 1 - Find the elf with the most calories using example from site", func(t *testing.T) {
-		expectedValue := 24000
-		caloriesCalculations := day1.CalculateCalories(true)
-		if caloriesCalculations[0].Value != expectedValue {
-			t.Errorf("Expected %d, got: %d", expectedValue, caloriesCalculations[0].Value)
-		}
-	})
+	tests := []struct {
+		name, filename      string
+		expectedValue, part int
+	}{
+		{"Part 1 - Find the elf with the most calories using example from site", "simple-example.txt", 24000, 1},
+		{"Part 2 - Add the top three elf calorie counts using example from site", "simple-example.txt", 45000, 2},
+		{"Part 1 - Find the elf with the most calories", "example.txt", 70374, 1},
+		{"Part 2 - Add the top three elf calorie counts", "example.txt", 204610, 2},
+	}
 
-	t.Run("Part 2 - Add the top three elf calorie counts using example from site", func(t *testing.T) {
-		expectedValue := 45000
-		result := day1.FindTopThreeElves(true)
-		if result != expectedValue {
-			t.Errorf("Expected %d, got: %d", expectedValue, result)
-		}
-	})
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := day1.CalculateCalories(test.filename, test.part)
 
-	t.Run("Part 1 - Find the elf with the most calories", func(t *testing.T) {
-		expectedValue := 70374
-		caloriesCalculations := day1.CalculateCalories(false)
-		if caloriesCalculations[0].Value != expectedValue {
-			t.Errorf("Expected %d, got: %d", expectedValue, caloriesCalculations[0].Value)
-		}
-	})
-
-	t.Run("Part 2 - Add the top three elf calorie counts", func(t *testing.T) {
-		expectedValue := 204610
-		result := day1.FindTopThreeElves(false)
-		if result != expectedValue {
-			t.Errorf("Expected %d, got: %d", expectedValue, result)
-		}
-	})
+			if result != test.expectedValue {
+				t.Errorf("Expected %d, got: %d", test.expectedValue, result)
+			}
+		})
+	}
 }

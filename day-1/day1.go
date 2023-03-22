@@ -8,37 +8,27 @@ import (
 	"strings"
 )
 
-type kv struct {
-	Key   int
-	Value int
-}
-
-func CalculateCalories(useExample bool) []kv {
-	var fileName = "example.txt"
-	if useExample {
-		fileName = "simple-example.txt"
-	}
-	data, err := os.ReadFile(fileName)
+func CalculateCalories(filename string, part int) int {
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatalf(err.Error(), "err")
 	}
 
-	//Split on \n\n to get individual blocks of calories
-	//Loop through those blocks, convert string to ints
-	//Sum the slice and add results to map where key is the index and value is number of calories
-	//Sort slice from the highest calorie value (descending order)
-
-	results := make(map[int]int)
-
+	var results []int
 	individualCalories := strings.Split(string(data), "\n\n")
 
 	for i, _ := range individualCalories {
 		separatedCalories := convertSliceToInt(strings.Split(individualCalories[i], "\n"))
 		result := sumSlice(separatedCalories)
-		results[i] = result
+		results = append(results, result)
 	}
 
-	return sortByDescendingValue(results)
+	sort.Sort(sort.Reverse(sort.IntSlice(results)))
+
+	if part == 1 {
+		return results[0]
+	}
+	return results[0] + results[1] + results[2]
 }
 
 //Takes a slice of strings and converts to slice of ints
@@ -58,32 +48,5 @@ func sumSlice(array []int) int {
 	for _, v := range array {
 		result += v
 	}
-	return result
-}
-
-//Takes a map and sorts in descending order returning a slice of structs separated with keys and values
-func sortByDescendingValue(results map[int]int) []kv {
-	var ss []kv
-	for k, v := range results {
-		ss = append(ss, kv{k, v})
-	}
-
-	sort.Slice(ss, func(i, j int) bool {
-		return ss[i].Value > ss[j].Value
-	})
-
-	return ss
-}
-
-//FindTopThreeElves - After calculating the elf calories, the top three and summed and returned
-func FindTopThreeElves(useExample bool) int {
-	elfCalories := CalculateCalories(useExample)
-	topThreeElves := elfCalories[:3]
-
-	var result = 0
-	for _, elf := range topThreeElves {
-		result += elf.Value
-	}
-
 	return result
 }
